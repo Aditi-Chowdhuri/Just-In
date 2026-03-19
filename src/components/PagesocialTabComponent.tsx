@@ -1,4 +1,6 @@
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
+import { NavLink } from "react-router-dom";
+import { AnimatePresence, motion } from "framer-motion";
 
 const tabs = ["For You", "Following", "Trending", "Outfit", "Item", "Dump"];
 
@@ -84,45 +86,157 @@ const dumpGallery = [
   },
 ];
 
-function TopIconButton({ children }) {
-  return <button className="ji-icon-btn">{children}</button>;
+function HeartIcon() {
+  return (
+    <svg viewBox="0 0 24 24" className="ji-svg-icon" fill="none" aria-hidden="true">
+      <path
+        d="M12 20.5L10.55 19.18C5.4 14.52 2 11.44 2 7.65C2 4.57 4.42 2.2 7.5 2.2C9.24 2.2 10.91 3.01 12 4.29C13.09 3.01 14.76 2.2 16.5 2.2C19.58 2.2 22 4.57 22 7.65C22 11.44 18.6 14.52 13.45 19.19L12 20.5Z"
+        stroke="currentColor"
+        strokeWidth="1.8"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
 }
 
-function BottomIcon({ active, children }) {
+function CartIcon() {
   return (
-    <button className={`ji-bottom-icon ${active ? "active" : ""}`}>
+    <svg viewBox="0 0 24 24" className="ji-svg-icon" fill="none" aria-hidden="true">
+      <path
+        d="M3 4H5L7.2 14.2C7.39 15.08 8.16 15.7 9.06 15.7H17.5C18.35 15.7 19.1 15.14 19.34 14.33L21 8.5H6.2"
+        stroke="currentColor"
+        strokeWidth="1.8"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <circle cx="10" cy="19" r="1.5" fill="currentColor" />
+      <circle cx="18" cy="19" r="1.5" fill="currentColor" />
+    </svg>
+  );
+}
+
+function HomeIcon() {
+  return (
+    <svg viewBox="0 0 30 30" className="ji-bottom-svg" fill="none" aria-hidden="true">
+      <path
+        d="M4.2 11.2L13 4.5C14.2 3.58 15.8 3.58 17 4.5L25.8 11.2V24.5C25.8 25.38 25.08 26.1 24.2 26.1H5.8C4.92 26.1 4.2 25.38 4.2 24.5V11.2Z"
+        fill="currentColor"
+        fillOpacity="0.18"
+      />
+      <path
+        d="M4.2 11.2L13 4.5C14.2 3.58 15.8 3.58 17 4.5L25.8 11.2V24.5C25.8 25.38 25.08 26.1 24.2 26.1H5.8C4.92 26.1 4.2 25.38 4.2 24.5V11.2Z"
+        stroke="currentColor"
+        strokeWidth="1.5"
+      />
+      <path d="M11.5 26V18.2H18.5V26" stroke="currentColor" strokeWidth="1.5" />
+    </svg>
+  );
+}
+
+function SearchIcon() {
+  return (
+    <svg viewBox="0 0 30 30" className="ji-bottom-svg" fill="none" aria-hidden="true">
+      <circle cx="13" cy="13" r="8.4" stroke="currentColor" strokeWidth="1.8" />
+      <path d="M19.4 19.4L26.2 26.2" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+    </svg>
+  );
+}
+
+function MailIcon() {
+  return (
+    <svg viewBox="0 0 30 24" className="ji-bottom-svg" fill="none" aria-hidden="true">
+      <rect x="2" y="3" width="26" height="18" rx="3" stroke="currentColor" strokeWidth="1.5" />
+      <path d="M3.5 5L15 13L26.5 5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+    </svg>
+  );
+}
+
+function ProfileIcon() {
+  return (
+    <svg viewBox="0 0 28 29" className="ji-bottom-svg" fill="none" aria-hidden="true">
+      <rect x="1.5" y="1.5" width="25" height="26" rx="6" stroke="currentColor" strokeWidth="1.5" />
+      <circle cx="14" cy="10.2" r="4.2" stroke="currentColor" strokeWidth="1.5" />
+      <path d="M7 22.5C8.1 19.7 10.7 18 14 18C17.3 18 19.9 19.7 21 22.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+    </svg>
+  );
+}
+
+function PlusFabIcon() {
+  return (
+    <svg width="40" height="40" viewBox="0 0 40 40" aria-hidden="true">
+      <path d="M40 20C40 31.0457 31.0457 40 20 40C8.9543 40 0 31.0457 0 20C0 8.9543 8.9543 0 20 0C31.0457 0 40 8.9543 40 20Z" fill="black" fillOpacity="0.18" />
+      <path d="M20 10V30M10 20H30" stroke="black" strokeWidth="2" strokeLinecap="round" />
+    </svg>
+  );
+}
+
+function TopLogo() {
+  return (
+    <svg
+      width="64"
+      height="53"
+      viewBox="0 0 64.635 53.3852"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      className="ji-logo-svg"
+      aria-label="Just In logo"
+    >
+      <path
+        d="M49.9852 7.88789C51.8162 6.66005 54.2898 7.15772 55.5105 8.99952C62.7352 19.9013 64.635 29.8642 63.8271 37.4808C63.4266 41.2561 62.3525 44.5049 60.8761 46.9727C59.5302 49.2223 57.3469 51.6133 54.3805 52.0611C49.575 52.7863 45.8872 50.6122 43.2748 47.5473C40.8076 44.6526 39.0539 40.7241 37.657 36.9774C36.2943 33.3222 34.9639 28.9186 33.8353 25.6709C32.5837 22.0693 31.4737 19.5388 30.3575 18.1353C29.6997 17.3083 28.4194 16.786 26.6556 17.0299C25.7083 17.1609 24.9646 17.4645 24.43 17.79C26.7463 21.2825 28.7386 25.2808 29.998 29.3095C31.3614 33.671 31.9888 38.4611 30.8268 42.7665C29.5915 47.3428 26.4197 50.989 21.153 52.7109L20.7787 52.8338L20.3872 52.88C16.118 53.3852 12.2223 52.3373 9.866 48.9314C7.78491 45.923 7.62594 42.01 8.03023 38.5384C8.74143 32.4317 11.5434 24.9802 14.7601 18.2613C13.3252 16.6484 11.9125 15.4101 10.6621 14.636C8.78803 13.4758 8.20382 11.0077 9.35706 9.12242C10.5103 7.23722 12.9639 6.64951 14.8379 7.8096C16.3999 8.77658 17.9364 10.0536 19.4005 11.5328C21.248 10.1791 23.4853 9.37631 25.57 9.08798C29.1729 8.58972 33.6481 9.44149 36.58 13.1282C38.6512 15.7327 40.1313 19.4975 41.3574 23.0256C42.7065 26.908 43.7419 30.4701 45.1184 34.1623C46.4608 37.7629 47.8199 40.5644 49.3246 42.3297C50.611 43.839 51.7043 44.2915 52.979 44.1607C53.0827 44.0815 53.4894 43.7733 54.0482 42.8393C54.8378 41.5195 55.6067 39.4275 55.9034 36.6298C56.49 31.0997 55.2022 22.9857 48.8802 13.446C47.6596 11.6042 48.1544 9.1158 49.9852 7.88789ZM20.0129 25.9981C17.9195 30.9295 16.3836 35.7071 15.9453 39.4707C15.6076 42.3702 16.0287 43.806 16.4068 44.3525C16.5043 44.4935 16.9052 45.1361 19.0604 44.9569C21.5037 44.0547 22.6288 42.547 23.1366 40.6654C23.7425 38.42 23.5233 35.3188 22.3966 31.7144C21.8006 29.8079 20.9825 27.87 20.0129 25.9981Z M4.38281 0C6.80338 0 8.76563 1.97395 8.76563 4.40895C8.76563 6.84395 6.80338 8.8179 4.38281 8.8179C1.96225 8.8179 0 6.84395 0 4.40895C0 1.97395 1.96225 0 4.38281 0Z"
+        fill="#CFFF04"
+        fillRule="evenodd"
+      />
+    </svg>
+  );
+}
+
+function TopIconButton({ label, children }) {
+  return (
+    <button className="ji-icon-btn" aria-label={label} type="button">
       {children}
     </button>
+  );
+}
+
+function BottomNavItem({ to, label, children }) {
+  return (
+    <NavLink
+      to={to}
+      aria-label={label}
+      className={({ isActive }) => `ji-bottom-icon ${isActive ? "active" : ""}`}
+    >
+      {children}
+    </NavLink>
   );
 }
 
 function Story({ story }) {
   if (story.type === "new") {
     return (
-      <button className="ji-story">
+      <motion.button whileTap={{ scale: 0.96 }} className="ji-story" aria-label="Create new drop">
         <div className="ji-story-ring">
           <div className="ji-story-add">+</div>
         </div>
         <span className="ji-story-name active">{story.name}</span>
-      </button>
+      </motion.button>
     );
   }
 
   return (
-    <button className="ji-story">
+    <motion.button whileTap={{ scale: 0.96 }} className="ji-story" aria-label={`Open story by ${story.name}`}>
       <div className="ji-story-ring">
         <div className="ji-story-image-wrap">
           <img src={story.image} alt={story.name} className="ji-story-image" />
         </div>
       </div>
       <span className="ji-story-name">{story.name}</span>
-    </button>
+    </motion.button>
   );
 }
 
 function ProductChip({ product, active }) {
   return (
-    <div className={`ji-product-chip ${active ? "active" : ""}`}>
+    <motion.div layout className={`ji-product-chip ${active ? "active" : ""}`}>
       <div className="ji-product-thumb-wrap">
         <img src={product.image} alt={product.name} className="ji-product-thumb" />
       </div>
@@ -130,30 +244,34 @@ function ProductChip({ product, active }) {
         <div className="ji-product-name">{product.name}</div>
         <div className="ji-product-price">{product.price}</div>
       </div>
-    </div>
+    </motion.div>
   );
 }
 
 function FeedStats() {
   return (
-    <div className="ji-stats-row">
+    <div className="ji-stats-row" aria-label="Post stats">
       <div className="ji-stat">
-        <span>♡</span>
+        <span aria-hidden="true">♡</span>
         <span>120</span>
       </div>
       <div className="ji-stat">
-        <span>▣</span>
+        <span aria-hidden="true">▣</span>
         <span>24</span>
       </div>
       <div className="ji-stat">
-        <span>↗</span>
+        <span aria-hidden="true">↗</span>
       </div>
     </div>
   );
 }
 
 function ActionButton({ children }) {
-  return <button className="ji-action-btn">{children}</button>;
+  return (
+    <motion.button whileTap={{ scale: 0.97 }} className="ji-action-btn" type="button">
+      {children}
+    </motion.button>
+  );
 }
 
 function TagButton({ children, type = "lime" }) {
@@ -162,7 +280,7 @@ function TagButton({ children, type = "lime" }) {
 
 function TrendingCard() {
   return (
-    <div className="ji-trending-card">
+    <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} className="ji-trending-card">
       <div className="ji-trending-icon">◔</div>
       <div>
         <div className="ji-trending-label">Trending at NYU this week</div>
@@ -173,7 +291,7 @@ function TrendingCard() {
           <span>#VintageLevis</span>
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 }
 
@@ -190,6 +308,17 @@ function PostHeader({ name, image, time, badge, badgeType = "pink" }) {
         </div>
       </div>
       <TagButton type={badgeType}>{badge}</TagButton>
+    </div>
+  );
+}
+
+function SkeletonCard() {
+  return (
+    <div className="ji-skeleton-card" aria-hidden="true">
+      <div className="ji-skeleton-line short" />
+      <div className="ji-skeleton-media" />
+      <div className="ji-skeleton-line" />
+      <div className="ji-skeleton-line medium" />
     </div>
   );
 }
@@ -215,31 +344,39 @@ function OutfitPost() {
 
       <div className="ji-media-wrap outfit">
         <img src="/image-009.png" alt="Outfit post" className="ji-main-media" />
-
         <div className="ji-flame-mark">◔</div>
 
         {productDots.map((dot, index) => (
-          <button
+          <motion.button
+            whileTap={{ scale: 0.94 }}
             key={dot.id}
             className={`ji-shop-dot ${selectedProduct === index ? "active" : ""}`}
             style={{ top: dot.top, left: dot.left }}
             onClick={() => setSelectedProduct(index)}
+            aria-label={`Select product ${index + 1}`}
+            aria-pressed={selectedProduct === index}
+            type="button"
           >
             <span>⌂</span>
-          </button>
+          </motion.button>
         ))}
 
         <div className="ji-shop-hint">tap the dots to shop this look</div>
       </div>
 
       <div className="ji-product-strip">
-        <button className="ji-look-btn">GET THE WHOLE LOOK</button>
-        <div className="ji-product-scroll">
+        <button className="ji-look-btn" type="button">
+          GET THE WHOLE LOOK
+        </button>
+        <div className="ji-product-scroll" role="list" aria-label="Outfit products">
           {outfitProducts.map((product, index) => (
             <button
               key={product.id}
               className="ji-product-scroll-item"
               onClick={() => setSelectedProduct(index)}
+              aria-pressed={selectedProduct === index}
+              aria-label={`Select ${product.name}`}
+              type="button"
             >
               <ProductChip product={product} active={selectedProduct === index} />
             </button>
@@ -269,7 +406,6 @@ function OutfitPost() {
 
 function ItemPost() {
   const [galleryIndex, setGalleryIndex] = useState(0);
-
   const currentImage = useMemo(() => itemGallery[galleryIndex], [galleryIndex]);
 
   return (
@@ -284,14 +420,29 @@ function ItemPost() {
 
       <div className="ji-item-card">
         <div className="ji-gallery-main">
-          <img src={currentImage} alt="Gallery item" className="ji-main-media" />
+          <AnimatePresence mode="wait">
+            <motion.img
+              key={currentImage}
+              src={currentImage}
+              alt={`Gallery item ${galleryIndex + 1}`}
+              className="ji-main-media"
+              initial={{ opacity: 0.35 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0.35 }}
+              transition={{ duration: 0.2 }}
+            />
+          </AnimatePresence>
 
-          <div className="ji-gallery-dots">
+          <div className="ji-gallery-dots" role="tablist" aria-label="Item gallery">
             {itemGallery.map((_, index) => (
               <button
                 key={index}
                 className={`ji-gallery-dot ${galleryIndex === index ? "active" : ""}`}
                 onClick={() => setGalleryIndex(index)}
+                aria-label={`Show gallery image ${index + 1}`}
+                aria-selected={galleryIndex === index}
+                role="tab"
+                type="button"
               />
             ))}
           </div>
@@ -316,7 +467,9 @@ function ItemPost() {
 
             <div className="ji-price-row">
               <div className="ji-price">$ 120</div>
-              <button className="ji-buy-btn">BUY NOW</button>
+              <button className="ji-buy-btn" type="button">
+                BUY NOW
+              </button>
             </div>
           </div>
         </div>
@@ -327,7 +480,6 @@ function ItemPost() {
 
 function DumpPost() {
   const [selectedIndex, setSelectedIndex] = useState(0);
-
   const selected = dumpGallery[selectedIndex];
 
   return (
@@ -342,17 +494,31 @@ function DumpPost() {
 
       <div className="ji-item-card">
         <div className="ji-gallery-main square">
-          <img src={selected.image} alt={selected.title} className="ji-main-media" />
+          <AnimatePresence mode="wait">
+            <motion.img
+              key={selected.image}
+              src={selected.image}
+              alt={selected.title}
+              className="ji-main-media"
+              initial={{ opacity: 0.35 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0.35 }}
+              transition={{ duration: 0.2 }}
+            />
+          </AnimatePresence>
 
           {selected.sold && <div className="ji-sold-overlay">SOLD</div>}
         </div>
 
-        <div className="ji-thumb-rail">
+        <div className="ji-thumb-rail" aria-label="Dump gallery thumbnails">
           {dumpGallery.map((item, index) => (
             <button
               key={index}
               className={`ji-thumb-button ${selectedIndex === index ? "active" : ""}`}
               onClick={() => setSelectedIndex(index)}
+              aria-pressed={selectedIndex === index}
+              aria-label={`Show ${item.title}`}
+              type="button"
             >
               <img src={item.image} alt={item.title} className="ji-thumb-square" />
             </button>
@@ -387,7 +553,9 @@ function DumpPost() {
 
             <div className="ji-price-row">
               <div className="ji-price">{selected.price}</div>
-              <button className="ji-buy-btn">BUY BUNDLE</button>
+              <button className="ji-buy-btn" type="button">
+                BUY BUNDLE
+              </button>
             </div>
           </div>
         </div>
@@ -398,16 +566,98 @@ function DumpPost() {
 
 export default function PagesocialTabComponent() {
   const [activeTab, setActiveTab] = useState("For You");
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const timer = window.setTimeout(() => setLoading(false), 650);
+    return () => window.clearTimeout(timer);
+  }, []);
 
   return (
     <>
       <style>{`
+        :root {
+          --ji-accent: #CFFF04;
+          --ji-bg: #111111;
+          --ji-panel: #262626;
+          --ji-border: #2f2f2f;
+          --ji-text: #ffffff;
+          --ji-muted: #8f8f8f;
+          --ji-subtle: #737373;
+          --ji-pink: #ff56b3;
+          --ji-blue: #56a5ff;
+          --ji-green: #67ff56;
+        }
+
+        .app-shell {
+          min-height: 100vh;
+          display: flex;
+          flex-direction: column;
+          padding: 20px;
+          gap: 18px;
+          background:
+            radial-gradient(circle at top left, rgba(207, 255, 4, 0.08), transparent 30%),
+            radial-gradient(circle at top right, rgba(255, 86, 179, 0.08), transparent 24%),
+            linear-gradient(180deg, #030303 0%, #0a0a0a 100%);
+          color: white;
+        }
+
+        .app-header {
+          border: 1px solid rgba(255,255,255,0.08);
+          background: rgba(10,10,10,0.82);
+          backdrop-filter: blur(14px);
+          border-radius: 24px;
+          padding: 18px 20px;
+          box-shadow: 0 20px 60px rgba(0,0,0,0.35);
+        }
+
+        .app-kicker {
+          margin: 0 0 6px;
+          color: var(--ji-accent);
+          font-size: 12px;
+          text-transform: uppercase;
+          letter-spacing: 0.14em;
+        }
+
+        .app-title {
+          margin: 0;
+          font-size: clamp(28px, 3vw, 38px);
+          line-height: 1.05;
+        }
+
+        .app-subtitle {
+          margin: 8px 0 0;
+          color: #8a8a8a;
+          font-size: 14px;
+        }
+
+        .app-main {
+          flex: 1;
+          min-height: 0;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+
+        .placeholder-card {
+          width: min(100%, 520px);
+          padding: 28px;
+          border-radius: 24px;
+          border: 1px solid rgba(255,255,255,0.08);
+          background: rgba(16,16,16,0.84);
+        }
+
+        .placeholder-link {
+          color: var(--ji-accent);
+          text-decoration: none;
+        }
+
         .ji-phone {
           width: 100%;
           max-width: 402px;
           height: min(874px, calc(100vh - 150px));
           min-height: 720px;
-          background: #111111;
+          background: var(--ji-bg);
           border: 1px solid rgba(255,255,255,0.08);
           border-radius: 42px;
           overflow: hidden;
@@ -422,7 +672,7 @@ export default function PagesocialTabComponent() {
           height: 100%;
           overflow-y: auto;
           overflow-x: hidden;
-          background: #111111;
+          background: var(--ji-bg);
           padding-bottom: 110px;
           scrollbar-width: none;
         }
@@ -472,10 +722,10 @@ export default function PagesocialTabComponent() {
           display: inline-flex;
           align-items: center;
           gap: 8px;
-          border: 1px solid #CFFF04;
+          border: 1px solid var(--ji-accent);
           border-radius: 999px;
           background: rgba(207,255,4,0.16);
-          color: #CFFF04;
+          color: var(--ji-accent);
           padding: 8px 14px;
           font-size: 15px;
           white-space: nowrap;
@@ -485,7 +735,7 @@ export default function PagesocialTabComponent() {
           width: 9px;
           height: 9px;
           border-radius: 999px;
-          background: #CFFF04;
+          background: var(--ji-accent);
         }
 
         .ji-top-icons {
@@ -495,16 +745,44 @@ export default function PagesocialTabComponent() {
         }
 
         .ji-icon-btn {
-          width: 34px;
-          height: 34px;
+          width: 36px;
+          height: 36px;
           border: 0;
           background: transparent;
-          color: #CFFF04;
+          color: var(--ji-accent);
           display: inline-flex;
           align-items: center;
           justify-content: center;
           cursor: pointer;
-          font-size: 21px;
+          border-radius: 999px;
+          transition: transform 0.18s ease, background-color 0.18s ease;
+        }
+
+        .ji-icon-btn:hover {
+          background: rgba(207,255,4,0.08);
+          transform: translateY(-1px);
+        }
+
+        .ji-icon-btn:focus-visible,
+        .ji-tab:focus-visible,
+        .ji-story:focus-visible,
+        .ji-shop-dot:focus-visible,
+        .ji-gallery-dot:focus-visible,
+        .ji-thumb-button:focus-visible,
+        .ji-look-btn:focus-visible,
+        .ji-action-btn:focus-visible,
+        .ji-buy-btn:focus-visible,
+        .ji-product-scroll-item:focus-visible,
+        .ji-bottom-icon:focus-visible,
+        .ji-center-fab:focus-visible {
+          outline: 2px solid var(--ji-accent);
+          outline-offset: 2px;
+        }
+
+        .ji-svg-icon {
+          width: 22px;
+          height: 22px;
+          display: block;
         }
 
         .ji-tabs {
@@ -521,17 +799,23 @@ export default function PagesocialTabComponent() {
         .ji-tab {
           border: 1px solid #525252;
           background: transparent;
-          color: #8f8f8f;
+          color: var(--ji-muted);
           border-radius: 999px;
           padding: 8px 14px;
           white-space: nowrap;
           cursor: pointer;
           font-size: 14px;
+          transition: all 0.18s ease;
+        }
+
+        .ji-tab:hover {
+          border-color: #777;
+          color: #d0d0d0;
         }
 
         .ji-tab.active {
-          background: #CFFF04;
-          border-color: #CFFF04;
+          background: var(--ji-accent);
+          border-color: var(--ji-accent);
           color: #000;
         }
 
@@ -559,6 +843,11 @@ export default function PagesocialTabComponent() {
           width: 68px;
           padding: 0;
           cursor: pointer;
+          transition: transform 0.18s ease;
+        }
+
+        .ji-story:hover {
+          transform: translateY(-1px);
         }
 
         .ji-story-ring {
@@ -577,7 +866,7 @@ export default function PagesocialTabComponent() {
           width: 64px;
           height: 64px;
           border-radius: 999px;
-          background: #111;
+          background: var(--ji-bg);
           display: flex;
           align-items: center;
           justify-content: center;
@@ -585,7 +874,7 @@ export default function PagesocialTabComponent() {
         }
 
         .ji-story-add {
-          color: #CFFF04;
+          color: var(--ji-accent);
           font-size: 38px;
           line-height: 1;
           background: radial-gradient(circle at top left, rgba(255,255,255,0.2), transparent 45%), linear-gradient(135deg, #c084fc, #7c3aed);
@@ -606,7 +895,7 @@ export default function PagesocialTabComponent() {
         }
 
         .ji-story-name.active {
-          color: #CFFF04;
+          color: var(--ji-accent);
         }
 
         .ji-trending-card {
@@ -621,7 +910,7 @@ export default function PagesocialTabComponent() {
         }
 
         .ji-trending-icon {
-          color: #CFFF04;
+          color: var(--ji-accent);
           font-size: 20px;
           line-height: 1;
           margin-top: 2px;
@@ -637,7 +926,7 @@ export default function PagesocialTabComponent() {
           display: flex;
           flex-wrap: wrap;
           gap: 8px;
-          color: #CFFF04;
+          color: var(--ji-accent);
           font-size: 14px;
           font-weight: 700;
         }
@@ -649,7 +938,7 @@ export default function PagesocialTabComponent() {
         }
 
         .ji-card {
-          background: #111111;
+          background: var(--ji-bg);
           border-top: 1px solid #2b2b2b;
           border-bottom: 1px solid #2b2b2b;
         }
@@ -683,7 +972,7 @@ export default function PagesocialTabComponent() {
           height: 100%;
           border-radius: 999px;
           object-fit: cover;
-          background: #111;
+          background: var(--ji-bg);
         }
 
         .avatar-sm {
@@ -699,7 +988,7 @@ export default function PagesocialTabComponent() {
 
         .ji-post-meta {
           font-size: 13px;
-          color: #737373;
+          color: var(--ji-subtle);
           margin-top: 4px;
         }
 
@@ -718,27 +1007,27 @@ export default function PagesocialTabComponent() {
         }
 
         .ji-tag-button.pink {
-          color: #ff56b3;
-          border-color: #ff56b3;
+          color: var(--ji-pink);
+          border-color: var(--ji-pink);
           background: rgba(255,86,179,0.16);
         }
 
         .ji-tag-button.blue {
-          color: #56a5ff;
-          border-color: #56a5ff;
+          color: var(--ji-blue);
+          border-color: var(--ji-blue);
           background: rgba(86,165,255,0.16);
         }
 
         .ji-tag-button.green {
-          color: #67ff56;
-          border-color: #67ff56;
+          color: var(--ji-green);
+          border-color: var(--ji-green);
           background: rgba(103,255,86,0.16);
         }
 
         .ji-media-wrap {
           position: relative;
           width: 100%;
-          background: #111;
+          background: var(--ji-bg);
           overflow: hidden;
         }
 
@@ -757,7 +1046,7 @@ export default function PagesocialTabComponent() {
           position: absolute;
           top: 10px;
           left: 16px;
-          color: #CFFF04;
+          color: var(--ji-accent);
           font-size: 20px;
         }
 
@@ -768,7 +1057,7 @@ export default function PagesocialTabComponent() {
           height: 30px;
           border-radius: 999px;
           border: 0;
-          background: #CFFF04;
+          background: var(--ji-accent);
           color: #000;
           box-shadow: 0 0 20px rgba(207,255,4,0.45);
           cursor: pointer;
@@ -795,7 +1084,7 @@ export default function PagesocialTabComponent() {
         }
 
         .ji-product-strip {
-          background: #262626;
+          background: var(--ji-panel);
           padding: 12px 16px;
           display: flex;
           gap: 10px;
@@ -810,8 +1099,8 @@ export default function PagesocialTabComponent() {
 
         .ji-look-btn {
           flex: 0 0 auto;
-          border: 1px solid #CFFF04;
-          background: #CFFF04;
+          border: 1px solid var(--ji-accent);
+          background: var(--ji-accent);
           color: #000;
           border-radius: 25px;
           padding: 12px 16px;
@@ -819,6 +1108,13 @@ export default function PagesocialTabComponent() {
           font-weight: 700;
           min-height: 48px;
           cursor: pointer;
+          transition: transform 0.18s ease, box-shadow 0.18s ease;
+        }
+
+        .ji-look-btn:hover,
+        .ji-action-btn:hover,
+        .ji-buy-btn:hover {
+          transform: translateY(-1px);
         }
 
         .ji-product-scroll {
@@ -877,7 +1173,7 @@ export default function PagesocialTabComponent() {
 
         .ji-product-price {
           margin-top: 8px;
-          color: #CFFF04;
+          color: var(--ji-accent);
           font-weight: 700;
           font-size: 14px;
         }
@@ -887,7 +1183,7 @@ export default function PagesocialTabComponent() {
         }
 
         .ji-card-content.darker {
-          background: #262626;
+          background: var(--ji-panel);
         }
 
         .ji-row-between {
@@ -902,7 +1198,7 @@ export default function PagesocialTabComponent() {
           display: flex;
           align-items: center;
           gap: 16px;
-          color: #737373;
+          color: var(--ji-subtle);
         }
 
         .ji-stat {
@@ -913,7 +1209,7 @@ export default function PagesocialTabComponent() {
         }
 
         .ji-action-btn {
-          border: 1px solid #CFFF04;
+          border: 1px solid var(--ji-accent);
           background: rgba(207,255,4,0.25);
           color: white;
           border-radius: 25px;
@@ -938,7 +1234,7 @@ export default function PagesocialTabComponent() {
           display: flex;
           flex-wrap: wrap;
           gap: 8px 10px;
-          color: #CFFF04;
+          color: var(--ji-accent);
           font-weight: 700;
           font-size: 14px;
         }
@@ -948,7 +1244,7 @@ export default function PagesocialTabComponent() {
           border: 1px solid #525252;
           border-radius: 15px;
           overflow: hidden;
-          background: #111;
+          background: var(--ji-bg);
         }
 
         .ji-gallery-main {
@@ -981,11 +1277,13 @@ export default function PagesocialTabComponent() {
           background: white;
           opacity: 0.65;
           cursor: pointer;
+          transition: transform 0.18s ease, opacity 0.18s ease;
         }
 
         .ji-gallery-dot.active {
-          background: #CFFF04;
+          background: var(--ji-accent);
           opacity: 1;
+          transform: scale(1.15);
         }
 
         .ji-item-info {
@@ -1022,8 +1320,8 @@ export default function PagesocialTabComponent() {
         }
 
         .ji-buy-btn {
-          border: 1px solid #CFFF04;
-          background: #CFFF04;
+          border: 1px solid var(--ji-accent);
+          background: var(--ji-accent);
           color: #000;
           font-weight: 700;
           border-radius: 25px;
@@ -1035,7 +1333,7 @@ export default function PagesocialTabComponent() {
           display: flex;
           gap: 8px;
           overflow-x: auto;
-          background: #262626;
+          background: var(--ji-panel);
           padding: 8px 12px;
           scrollbar-width: none;
         }
@@ -1054,10 +1352,15 @@ export default function PagesocialTabComponent() {
           overflow: hidden;
           background: #737373;
           cursor: pointer;
+          transition: transform 0.18s ease, border-color 0.18s ease;
         }
 
         .ji-thumb-button.active {
-          border-color: #CFFF04;
+          border-color: var(--ji-accent);
+        }
+
+        .ji-thumb-button:hover {
+          transform: translateY(-1px);
         }
 
         .ji-thumb-square {
@@ -1090,8 +1393,8 @@ export default function PagesocialTabComponent() {
           right: 0;
           bottom: 0;
           z-index: 30;
-          background: #262626;
-          border-top: 1px solid #2f2f2f;
+          background: var(--ji-panel);
+          border-top: 1px solid var(--ji-border);
           padding: 10px 18px 8px;
         }
 
@@ -1117,10 +1420,17 @@ export default function PagesocialTabComponent() {
           cursor: pointer;
           opacity: 0.95;
           padding: 0;
+          border-radius: 999px;
+          transition: transform 0.18s ease, background-color 0.18s ease;
+        }
+
+        .ji-bottom-icon:hover {
+          background: rgba(255,255,255,0.05);
+          transform: translateY(-1px);
         }
 
         .ji-bottom-icon.active {
-          color: #CFFF04;
+          color: var(--ji-accent);
         }
 
         .ji-bottom-svg {
@@ -1140,7 +1450,7 @@ export default function PagesocialTabComponent() {
           height: 68px;
           border-radius: 999px;
           border: 1px solid #000;
-          background: #CFFF04;
+          background: var(--ji-accent);
           color: #000;
           box-shadow: 0 0 30px 20px rgba(207, 255, 4, 0.35);
           display: flex;
@@ -1149,6 +1459,12 @@ export default function PagesocialTabComponent() {
           transform: translateY(-18px);
           cursor: pointer;
           padding: 0;
+          transition: transform 0.18s ease, box-shadow 0.18s ease;
+        }
+
+        .ji-center-fab:hover {
+          transform: translateY(-20px);
+          box-shadow: 0 0 34px 20px rgba(207, 255, 4, 0.42);
         }
 
         .ji-center-fab svg {
@@ -1161,8 +1477,56 @@ export default function PagesocialTabComponent() {
           width: 29px;
           height: 4px;
           border-radius: 999px;
-          background: #CFFF04;
+          background: var(--ji-accent);
           margin: 2px auto 0;
+        }
+
+        .ji-skeleton-card {
+          padding: 16px;
+          border-top: 1px solid #2b2b2b;
+          border-bottom: 1px solid #2b2b2b;
+        }
+
+        .ji-skeleton-line,
+        .ji-skeleton-media {
+          background: linear-gradient(90deg, rgba(255,255,255,0.05), rgba(255,255,255,0.12), rgba(255,255,255,0.05));
+          background-size: 200% 100%;
+          animation: jiShimmer 1.2s linear infinite;
+          border-radius: 12px;
+        }
+
+        .ji-skeleton-line {
+          height: 14px;
+          margin-bottom: 12px;
+        }
+
+        .ji-skeleton-line.short {
+          width: 30%;
+        }
+
+        .ji-skeleton-line.medium {
+          width: 60%;
+        }
+
+        .ji-skeleton-media {
+          height: 280px;
+          margin-bottom: 12px;
+        }
+
+        @keyframes jiShimmer {
+          0% { background-position: 200% 0; }
+          100% { background-position: -200% 0; }
+        }
+
+        @media (max-width: 768px) {
+          .app-shell {
+            padding: 12px;
+          }
+
+          .app-header {
+            border-radius: 18px;
+            padding: 16px;
+          }
         }
 
         @media (max-width: 420px) {
@@ -1202,192 +1566,108 @@ export default function PagesocialTabComponent() {
         }
       `}</style>
 
-      <div className="ji-phone">
-        <div className="ji-scroll">
-          <header className="ji-top">
-            <div className="ji-notch-space" />
+      <div className="app-shell">
+        <main className="app-main">
+          <div className="ji-phone">
+            <div className="ji-scroll">
+              <header className="ji-top">
+                <div className="ji-notch-space" />
 
-            <div className="ji-top-row">
-              <div className="ji-logo">
-                <svg
-                  width="64"
-                  height="53"
-                  viewBox="0 0 64.635 53.3852"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="ji-logo-svg"
-                >
-                  <path
-                    d="M49.9852 7.88789C51.8162 6.66005 54.2898 7.15772 55.5105 8.99952C62.7352 19.9013 64.635 29.8642 63.8271 37.4808C63.4266 41.2561 62.3525 44.5049 60.8761 46.9727C59.5302 49.2223 57.3469 51.6133 54.3805 52.0611C49.575 52.7863 45.8872 50.6122 43.2748 47.5473C40.8076 44.6526 39.0539 40.7241 37.657 36.9774C36.2943 33.3222 34.9639 28.9186 33.8353 25.6709C32.5837 22.0693 31.4737 19.5388 30.3575 18.1353C29.6997 17.3083 28.4194 16.786 26.6556 17.0299C25.7083 17.1609 24.9646 17.4645 24.43 17.79C26.7463 21.2825 28.7386 25.2808 29.998 29.3095C31.3614 33.671 31.9888 38.4611 30.8268 42.7665C29.5915 47.3428 26.4197 50.989 21.153 52.7109L20.7787 52.8338L20.3872 52.88C16.118 53.3852 12.2223 52.3373 9.866 48.9314C7.78491 45.923 7.62594 42.01 8.03023 38.5384C8.74143 32.4317 11.5434 24.9802 14.7601 18.2613C13.3252 16.6484 11.9125 15.4101 10.6621 14.636C8.78803 13.4758 8.20382 11.0077 9.35706 9.12242C10.5103 7.23722 12.9639 6.64951 14.8379 7.8096C16.3999 8.77658 17.9364 10.0536 19.4005 11.5328C21.248 10.1791 23.4853 9.37631 25.57 9.08798C29.1729 8.58972 33.6481 9.44149 36.58 13.1282C38.6512 15.7327 40.1313 19.4975 41.3574 23.0256C42.7065 26.908 43.7419 30.4701 45.1184 34.1623C46.4608 37.7629 47.8199 40.5644 49.3246 42.3297C50.611 43.839 51.7043 44.2915 52.979 44.1607C53.0827 44.0815 53.4894 43.7733 54.0482 42.8393C54.8378 41.5195 55.6067 39.4275 55.9034 36.6298C56.49 31.0997 55.2022 22.9857 48.8802 13.446C47.6596 11.6042 48.1544 9.1158 49.9852 7.88789ZM20.0129 25.9981C17.9195 30.9295 16.3836 35.7071 15.9453 39.4707C15.6076 42.3702 16.0287 43.806 16.4068 44.3525C16.5043 44.4935 16.9052 45.1361 19.0604 44.9569C21.5037 44.0547 22.6288 42.547 23.1366 40.6654C23.7425 38.42 23.5233 35.3188 22.3966 31.7144C21.8006 29.8079 20.9825 27.87 20.0129 25.9981Z M4.38281 0C6.80338 0 8.76563 1.97395 8.76563 4.40895C8.76563 6.84395 6.80338 8.8179 4.38281 8.8179C1.96225 8.8179 0 6.84395 0 4.40895C0 1.97395 1.96225 0 4.38281 0Z"
-                    fill="#CFFF04"
-                    fillRule="evenodd"
-                  />
-                </svg>
+                <div className="ji-top-row">
+                  <div className="ji-logo">
+                    <TopLogo />
+                  </div>
+
+                  <div className="ji-campus-pill" aria-label="Current campus NYU">
+                    <span className="ji-campus-dot" />
+                    <span>NYU</span>
+                  </div>
+
+                  <div className="ji-top-icons">
+                    <TopIconButton label="Favorites">
+                      <HeartIcon />
+                    </TopIconButton>
+                    <TopIconButton label="Shopping cart">
+                      <CartIcon />
+                    </TopIconButton>
+                  </div>
+                </div>
+
+                <div className="ji-tabs" role="tablist" aria-label="Feed filters">
+                  {tabs.map((tab) => (
+                    <button
+                      key={tab}
+                      className={`ji-tab ${activeTab === tab ? "active" : ""}`}
+                      onClick={() => setActiveTab(tab)}
+                      aria-selected={activeTab === tab}
+                      role="tab"
+                      type="button"
+                    >
+                      {tab}
+                    </button>
+                  ))}
+                </div>
+              </header>
+
+              <div className="ji-tab-content">
+                <div className="ji-stories">
+                  {stories.map((story) => (
+                    <Story key={story.id} story={story} />
+                  ))}
+                </div>
+
+                <TrendingCard />
+
+                {loading ? (
+                  <div className="ji-feed">
+                    <SkeletonCard />
+                    <SkeletonCard />
+                    <SkeletonCard />
+                  </div>
+                ) : (
+                  <motion.div
+                    className="ji-feed"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ duration: 0.24 }}
+                  >
+                    <OutfitPost />
+                    <ItemPost />
+                    <DumpPost />
+                  </motion.div>
+                )}
+              </div>
+            </div>
+
+            <nav className="ji-bottom-nav" aria-label="Bottom navigation">
+              <div className="ji-bottom-nav-shell">
+                <BottomNavItem to="/" label="Home">
+                  <HomeIcon />
+                </BottomNavItem>
+
+                <BottomNavItem to="/search" label="Search">
+                  <SearchIcon />
+                </BottomNavItem>
+
+                <div className="ji-center-fab-wrap">
+                  <NavLink to="/create" aria-label="Create listing" className="ji-center-fab">
+                    <PlusFabIcon />
+                  </NavLink>
+                </div>
+
+                <BottomNavItem to="/inbox" label="Inbox">
+                  <MailIcon />
+                </BottomNavItem>
+
+                <BottomNavItem to="/profile" label="Profile">
+                  <ProfileIcon />
+                </BottomNavItem>
               </div>
 
-              <div className="ji-campus-pill">
-                <span className="ji-campus-dot" />
-                <span>NYU</span>
-              </div>
-
-              <div className="ji-top-icons">
-                <TopIconButton>♡</TopIconButton>
-                <TopIconButton>🛒</TopIconButton>
-              </div>
-            </div>
-
-            <div className="ji-tabs">
-              {tabs.map((tab) => (
-                <button
-                  key={tab}
-                  className={`ji-tab ${activeTab === tab ? "active" : ""}`}
-                  onClick={() => setActiveTab(tab)}
-                >
-                  {tab}
-                </button>
-              ))}
-            </div>
-          </header>
-
-          <div className="ji-tab-content">
-            <div className="ji-stories">
-              {stories.map((story) => (
-                <Story key={story.id} story={story} />
-              ))}
-            </div>
-
-            <TrendingCard />
-
-            <div className="ji-feed">
-              <OutfitPost />
-              <ItemPost />
-              <DumpPost />
-            </div>
+              <div className="ji-home-indicator" />
+            </nav>
           </div>
-        </div>
-
-        <nav className="ji-bottom-nav">
-          <div className="ji-bottom-nav-shell">
-            <BottomIcon active>
-              <svg
-                width="30"
-                height="30"
-                viewBox="0 0 30 30"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-                className="ji-bottom-svg"
-              >
-                <path
-                  d="M0 10.6225C0 9.62232 0 9.12222 0.218268 8.69417C0.436536 8.26612 0.841312 7.97242 1.65086 7.38501L9.47956 1.70453C10.6129 0.882192 11.1795 0.471025 11.8287 0.471025C12.4779 0.471025 13.0445 0.882192 14.1778 1.70453L22.0065 7.38501C22.8161 7.97242 23.2209 8.26612 23.4391 8.69417C23.6574 9.12222 23.6574 9.62232 23.6574 10.6225L23.6574 25.4652C23.6574 26.408 23.6574 26.8794 23.3645 27.1723C23.0716 27.4652 22.6002 27.4652 21.6574 27.4652L2 27.4652C1.05719 27.4652 0.585786 27.4652 0.292893 27.1723C0 26.8794 0 26.408 0 25.4652L0 10.6225Z"
-                  fill="currentColor"
-                  fillOpacity="0.25"
-                />
-                <path
-                  d="M2.94789 1.50325C3.13307 0.781009 3.22567 0.419889 3.49624 0.209945C3.76681 0 4.13961 0 4.88521 0L25.1148 0C25.8604 0 26.2332 0 26.5038 0.209945C26.7743 0.419889 26.8669 0.781009 27.0521 1.50325L29.84 12.3758C29.9136 12.6629 29.9504 12.8065 29.8753 12.9033C29.8003 13 29.652 13 29.3556 13L24.0719 13C23.716 13 23.538 13 23.4056 12.9022C23.2731 12.8044 23.2208 12.6343 23.1161 12.2941L21.4307 6.81641C21.2138 6.11152 21.1054 5.75907 21.0165 5.77711C20.9277 5.79515 20.9653 6.16198 21.0406 6.89563L21.5536 11.898C21.6064 12.4127 21.6328 12.6701 21.4839 12.835C21.335 13 21.0763 13 20.5589 13L16.736 13C16.3069 13 16.0924 13 15.9496 12.8712C15.8069 12.7423 15.785 12.5289 15.7412 12.102L15.199 6.81482C15.1265 6.10835 15.0903 5.75512 15 5.75512C14.9097 5.75512 14.8735 6.10835 14.801 6.81482L14.2588 12.102C14.215 12.5289 14.1931 12.7423 14.0504 12.8712C13.9076 13 13.6931 13 13.264 13L9.44114 13C8.92371 13 8.665 13 8.51609 12.835C8.36717 12.6701 8.39357 12.4127 8.44636 11.898L8.95942 6.89563C9.03467 6.16198 9.07229 5.79515 8.98347 5.77711C8.89464 5.75907 8.7862 6.11152 8.56931 6.81641L6.88387 12.2941C6.77919 12.6343 6.72685 12.8044 6.59443 12.9022C6.46201 13 6.28403 13 5.92809 13L0.644379 13C0.347954 13 0.199741 13 0.124676 12.9033C0.0496109 12.8065 0.0864233 12.6629 0.160048 12.3758L2.94789 1.50325Z"
-                  fill="currentColor"
-                />
-                <path
-                  d="M5 0L2 0C0.895431 0 0 0.895431 0 2L0 8.85C0 8.93284 0.0671574 9 0.15 9L6.85 9C6.93284 9 7 8.93284 7 8.85L7 2C7 0.895431 6.10457 0 5 0Z"
-                  transform="translate(11.6 20)"
-                  fill="currentColor"
-                />
-              </svg>
-            </BottomIcon>
-
-            <BottomIcon>
-              <svg
-                width="30"
-                height="30"
-                viewBox="0 0 31 31"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-                className="ji-bottom-svg"
-              >
-                <path
-                  d="M24 12C24 18.296 18.296 24 12 24C5.70395 24 0.6 18.296 0.6 12C0.6 5.70395 5.70395 0.6 12 0.6C18.296 0.6 23.4 5.70395 23.4 12H24H24.6C24.6 5.04121 18.9588 -0.6 12 -0.6C5.04121 -0.6 -0.6 5.04121 -0.6 12C-0.6 18.9588 5.04121 24.6 12 24.6C18.9588 24.6 24.6 18.9588 24.6 12H24Z"
-                  fill="currentColor"
-                />
-                <path
-                  d="M12 5.4C12.3314 5.4 12.6 5.66863 12.6 6C12.6 6.33137 12.3314 6.6 12 6.6V5.4ZM6 12.6C5.66863 12.6 5.4 12.3314 5.4 12C5.4 11.6686 5.66863 11.4 6 11.4V12.6ZM30.4243 29.5757C30.6586 29.8101 30.6586 30.19 30.4243 30.4243C30.19 30.6586 29.8101 30.6586 29.5757 30.4243L30.4243 29.5757ZM23.5757 24.4243C23.3414 24.19 23.3414 23.8101 23.5757 23.5757C23.8101 23.3414 24.19 23.3414 24.4243 23.5757L23.5757 24.4243ZM12 6.6C11.2909 6.6 10.5887 6.73968 9.93351 7.01105L9.47429 5.9024C10.275 5.57072 11.1333 5.4 12 5.4V6.6ZM9.93351 7.01105C9.27835 7.28243 8.68306 7.68019 8.18162 8.18162L7.3331 7.3331C7.94596 6.72023 8.67354 6.23408 9.47429 5.9024L9.93351 7.01105ZM8.18162 8.18162C7.68019 8.68306 7.28243 9.27835 7.01105 9.93351L5.9024 9.47429C6.23408 8.67354 6.72023 7.94596 7.3331 7.3331L8.18162 8.18162ZM7.01105 9.93351C6.73968 10.5887 6.6 11.2909 6.6 12H5.4C5.4 11.1333 5.57071 10.275 5.9024 9.47429L7.01105 9.93351ZM24.4243 23.5757L30.4243 29.5757L29.5757 30.4243L23.5757 24.4243L24.4243 23.5757Z"
-                  fill="currentColor"
-                />
-              </svg>
-            </BottomIcon>
-
-            <div className="ji-center-fab-wrap">
-              <button className="ji-center-fab">
-                <svg
-                  width="40"
-                  height="40"
-                  viewBox="0 0 40 40"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    d="M40 20C40 31.0457 31.0457 40 20 40C8.9543 40 0 31.0457 0 20C0 8.9543 8.9543 0 20 0C31.0457 0 40 8.9543 40 20Z"
-                    fill="black"
-                    fillOpacity="0.18"
-                  />
-                  <path
-                    d="M20 10V30M10 20H30"
-                    stroke="black"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                  />
-                </svg>
-              </button>
-            </div>
-
-            <BottomIcon>
-              <svg
-                width="30"
-                height="30"
-                viewBox="0 0 30 24"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-                className="ji-bottom-svg"
-              >
-                <path
-                  d="M4 0.6H26C26.9598 0.6 27.6192 0.601274 28.1146 0.667873C28.5927 0.732151 28.8271 0.847219 28.99 1.01005C29.1528 1.17288 29.2678 1.40731 29.3321 1.8854C29.3987 2.38076 29.4 3.04023 29.4 4V19C29.4 19.9598 29.3987 20.6192 29.3321 21.1146C29.2678 21.5927 29.1528 21.8271 28.99 21.99C28.8271 22.1528 28.5927 22.2678 28.1146 22.3321C27.6192 22.3987 26.9598 22.4 26 22.4H4C3.04023 22.4 2.38076 22.3987 1.8854 22.3321C1.40731 22.2678 1.17288 22.1528 1.01005 21.99C0.847219 21.8271 0.732151 21.5927 0.667873 21.1146C0.601274 20.6192 0.6 19.9598 0.6 19V4C0.6 3.04023 0.601274 2.38076 0.667873 1.88541C0.732151 1.40731 0.847219 1.17288 1.01005 1.01005C1.17288 0.847219 1.40731 0.732151 1.8854 0.667873C2.38076 0.601274 3.04023 0.6 4 0.6Z"
-                  stroke="currentColor"
-                  strokeWidth="1.2"
-                />
-                <path
-                  d="M0.8 1L14.3412 8.96863C14.7529 9.18824 15.2471 9.18824 15.6588 8.96863L29.2 1"
-                  stroke="currentColor"
-                  strokeWidth="1.2"
-                  strokeLinecap="round"
-                />
-              </svg>
-            </BottomIcon>
-
-            <BottomIcon>
-              <svg
-                width="30"
-                height="30"
-                viewBox="0 0 28 29"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-                className="ji-bottom-svg"
-              >
-                <path
-                  d="M8 1.2H20C21.9195 1.2 23.2385 1.20255 24.2292 1.33575C25.1854 1.4643 25.6542 1.69444 25.9799 2.0201C26.3056 2.34576 26.5357 2.81462 26.6643 3.77081C26.7975 4.76152 26.8 6.08046 26.8 8V20C26.8 21.9195 26.7975 23.2385 26.6643 24.2292C26.5357 25.1854 26.3056 25.6542 25.9799 25.9799C25.6542 26.3056 25.1854 26.5357 24.2292 26.6643C23.2385 26.7975 21.9195 26.8 20 26.8H8C6.08046 26.8 4.76152 26.7975 3.77081 26.6643C2.81462 26.5357 2.34576 26.3056 2.0201 25.9799C1.69444 25.6542 1.4643 25.1854 1.33575 24.2292C1.20255 23.2385 1.2 21.9195 1.2 20V8C1.2 6.08046 1.20255 4.76152 1.33575 3.77081C1.4643 2.81462 1.69444 2.34576 2.0201 2.0201C2.34576 1.69444 2.81462 1.4643 3.77081 1.33575C4.76152 1.20255 6.08046 1.2 8 1.2Z"
-                  stroke="currentColor"
-                  strokeWidth="1.2"
-                />
-                <circle cx="14" cy="10" r="4.6" stroke="currentColor" strokeWidth="1.2" />
-                <path
-                  d="M6 23C6.9 19.9 9.9 17.8 14 17.8C18.1 17.8 21.1 19.9 22 23"
-                  stroke="currentColor"
-                  strokeWidth="1.2"
-                  strokeLinecap="round"
-                />
-              </svg>
-            </BottomIcon>
-          </div>
-
-          <div className="ji-home-indicator" />
-        </nav>
+        </main>
       </div>
     </>
   );
