@@ -1,18 +1,29 @@
-# React + Vite
+# Just In Frontend Challenge
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This project is a responsive React + Vite implementation of the **Just In** home feed based on the provided design mockups and exported UI assets.
 
-Currently, two official plugins are available:
+It recreates a mobile-first social commerce experience with a custom top header, tab navigation, story row, trending card, outfit shopping post, item gallery post, dump listing post, and fixed bottom navigation.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## Preview
 
-## React Compiler
+The app is designed to look and behave like a polished mobile product inside a desktop browser while still adapting cleanly to smaller screens.
 
-The React Compiler is enabled on this template. See [this documentation](https://react.dev/learn/react-compiler) for more information.
+## Features
 
-Note: This will impact Vite dev & build performances.
+- Responsive mobile-first layout
+- Sticky top header
+- Horizontally scrollable tabs
+- Horizontally scrollable stories row
+- Trending section
+- Outfit post with interactive product dots
+- Item post with gallery navigation
+- Dump post with thumbnail selection and sold state
+- Fixed bottom navigation with SVG icons from the provided design code
+- Rebuilt component structure for cleaner layout and better responsiveness
 
-## Expanding the ESLint configuration
+## Tech Stack
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+- [React](https://react.dev/)
+- [Vite](https://vitejs.dev/)
+- CSS
+- Local static assets from the provided design export
